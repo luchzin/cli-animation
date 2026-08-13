@@ -16,28 +16,25 @@ abstract class Animation {
 
   Timer? _timer;
   Timer? _durationTimer;
-
   bool _running = false;
+  
+  // Tracked by the manager
+  int rowIndex = 0;
+  int totalRows = 1;
 
   bool get isRunning => _running;
 
   void start() {
     if (_running) return;
-
     _running = true;
 
-    stdout.write('\x1B[?25l');
+    stderr.write('\x1B[?25l'); // Hide cursor
 
     onStart();
-
     tick();
 
-    _timer = Timer.periodic(speed, (timer) {
-      if (!_running) {
-        timer.cancel();
-        return;
-      }
-
+    _timer = Timer.periodic(speed, (_) {
+      if (!_running) return;
       tick();
     });
 
@@ -47,39 +44,63 @@ abstract class Animation {
   }
 
   void tick();
-
   void onStart() {}
-
   void onStop() {}
 
   void stop() {
     if (!_running) return;
 
     _running = false;
-
     _timer?.cancel();
     _durationTimer?.cancel();
-
     _timer = null;
     _durationTimer = null;
 
     clearLine();
-
-    stdout.write('\x1B[?25h');
-
+    stderr.write('\x1B[?25h'); // Show cursor
     onStop();
   }
 
   void clearLine() {
-    stdout.write('\x1B[2K\r');
+    write('');
   }
 
   void write(String text) {
-    stdout.write('$color$text${AnsiColor.reset}');
-    stdout.flush();
+    final linesUp = totalRows - rowIndex;
+    // 1. Move up to target row
+    // 2. Clear line (\x1B[2K\r)
+    // 3. Write colored content
+    // 4. Return cursor back down to the anchor line at the bottom
+    stderr.write(
+      '\x1B[${linesUp}A'
+      '\x1B[2K\r'
+      '$color$text${AnsiColor.reset}'
+      '\x1B[${linesUp}B\r'
+    );
   }
 }
+class AnimationGroup {
+  AnimationGroup(this.animations);
+  final List<Animation> animations;
+  void start() {
+    // 1. Allocate vertical space in terminal by printing newlines
+    for (var i = 0; i < animations.length; i++) {
+      stderr.writeln();
+    }
+    // 2. Assign positions and start animations
+    for (var i = 0; i < animations.length; i++) {
+      animations[i].rowIndex = i;
+      animations[i].totalRows = animations.length;
+      animations[i].start();
+    }
+  }
 
+  void stop() {
+    for (final animation in animations) {
+      animation.stop();
+    }
+  }
+}
 class AnsiColor {
   const AnsiColor(this.code);
 
