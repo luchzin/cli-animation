@@ -13,16 +13,27 @@ abstract class Animation {
   final Duration? duration;
   final bool loop;
   final AnsiColor color;
-
+  int get height => 1;
   Timer? _timer;
   Timer? _durationTimer;
   bool _running = false;
-  
+
   // Tracked by the manager
   int rowIndex = 0;
   int totalRows = 1;
 
   bool get isRunning => _running;
+  void stopWithoutClearing() {
+    if (!_running) return;
+
+    _running = false;
+    _timer?.cancel();
+    _durationTimer?.cancel();
+    _timer = null;
+    _durationTimer = null;
+
+    onStop();
+  }
 
   void start() {
     if (_running) return;
@@ -67,40 +78,75 @@ abstract class Animation {
 
   void write(String text) {
     final linesUp = totalRows - rowIndex;
-    // 1. Move up to target row
-    // 2. Clear line (\x1B[2K\r)
-    // 3. Write colored content
-    // 4. Return cursor back down to the anchor line at the bottom
-    stderr.write(
-      '\x1B[${linesUp}A'
-      '\x1B[2K\r'
-      '$color$text${AnsiColor.reset}'
-      '\x1B[${linesUp}B\r'
-    );
+    // Split text into lines to handle multi-line rendering properly
+    final lines = text.split('\n');
+    final height = lines.length;
+    final buffer = StringBuffer();
+    // 1. Move up to this animation's top target row
+    buffer.write('\x1B[${linesUp}A');
+    // 2. Clear and print each line, applying color explicitly to each line
+    for (var i = 0; i < height; i++) {
+      buffer.write('\x1B[2K\r'); // Clear current line & carriage return
+      // Explicitly wrap each line with the animation's designated color
+      buffer.write('$color${lines[i]}${AnsiColor.reset}');
+      if (i < height - 1) {
+        buffer.write('\n'); // Move down to next line for multi-line animations
+      }
+    }
+    // 3. Move back down to the anchor position at the very bottom
+    final moveDown = linesUp - (height - 1);
+    if (moveDown > 0) {
+      buffer.write('\x1B[${moveDown}B\r');
+    } else {
+      buffer.write('\r');
+    }
+
+    stderr.write(buffer.toString());
   }
 }
+
 class AnimationGroup {
   AnimationGroup(this.animations);
   final List<Animation> animations;
+
   void start() {
-    // 1. Allocate vertical space in terminal by printing newlines
+    int currentOffset = 0;
+
     for (var i = 0; i < animations.length; i++) {
+      final anim = animations[i];
+      anim.rowIndex = currentOffset;
+      currentOffset += anim.height; // Clean & dynamic!
+    }
+
+    for (final anim in animations) {
+      anim.totalRows = currentOffset;
+    }
+
+    for (var i = 0; i < currentOffset; i++) {
       stderr.writeln();
     }
-    // 2. Assign positions and start animations
-    for (var i = 0; i < animations.length; i++) {
-      animations[i].rowIndex = i;
-      animations[i].totalRows = animations.length;
-      animations[i].start();
+
+    for (final anim in animations) {
+      anim.start();
     }
   }
 
   void stop() {
+    final totalLines = animations.first.totalRows;
+
     for (final animation in animations) {
-      animation.stop();
+      animation.stopWithoutClearing();
     }
+
+    // Clear the entire animation block top to bottom
+    stderr.write(
+      '\x1B[${totalLines}A' // Move up to top line
+      '\x1B[J' // Clear to bottom of screen
+      '\x1B[?25h', // Show cursor
+    );
   }
 }
+
 class AnsiColor {
   const AnsiColor(this.code);
 

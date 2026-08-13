@@ -1,7 +1,7 @@
-// main.dart
 import 'dart:async';
 import 'package:cli_animation/animation.dart';
 import 'package:cli_animation/src/blink.dart';
+import 'package:cli_animation/src/donut.dart';
 import 'package:cli_animation/src/spinner.dart';
 import 'package:cli_animation/src/typewriter.dart';
 
@@ -23,12 +23,12 @@ Future<void> main() async {
     text: 'Downloading assets into memory...',
     color: AnsiColor.green,
   );
-
-  final group = AnimationGroup([
-    spinner,
-    blink,
-    typewriter,
-  ]);
+  final donut = DonutAnimation(
+    width: 30,
+    height: 15,
+    speed: const Duration(milliseconds: 15),
+  );
+  final group = AnimationGroup([spinner, blink, typewriter, donut]);
 
   group.start();
 
