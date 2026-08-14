@@ -1,9 +1,5 @@
 import 'dart:async';
-import 'package:cli_animation/animation.dart';
-import 'package:cli_animation/src/blink.dart';
-import 'package:cli_animation/src/donut.dart';
-import 'package:cli_animation/src/spinner.dart';
-import 'package:cli_animation/src/typewriter.dart';
+import 'package:cli_animation/lib.dart';
 
 Future<void> main() async {
   print('Welcome to Fun CLI\n');
@@ -11,6 +7,10 @@ Future<void> main() async {
   final spinner = SpinnerAnimation(
     message: 'Installing dependencies...',
     color: AnsiColor.red,
+    speed: const Duration(milliseconds: 80),
+  );
+  final train = TrainAnimation(
+    color: AnsiColor.magenta,
     speed: const Duration(milliseconds: 80),
   );
 
@@ -28,7 +28,7 @@ Future<void> main() async {
     height: 15,
     speed: const Duration(milliseconds: 15),
   );
-  final group = AnimationGroup([spinner, blink, typewriter, donut]);
+  final group = AnimationGroup([spinner, blink, typewriter, train, donut]);
 
   group.start();
 

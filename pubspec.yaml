@@ -1,7 +1,7 @@
 name: cli_animation
 description: A sample command-line animation.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/luchzin/cli-animation
 
 environment:
   sdk: ^3.12.2
