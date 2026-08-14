@@ -1,5 +1,5 @@
 name: cli_animation
-description: A sample command-line animation.
+description: A sample command-line application with an entrypoint in `bin/`, library code.
 version: 1.0.0
 repository: https://github.com/luchzin/cli-animation
 

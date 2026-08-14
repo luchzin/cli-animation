@@ -7,3 +7,4 @@ export 'src/donut.dart';
 export 'src/blink.dart';
 export 'src/typewriter.dart';
 export 'src/train.dart';
+export 'src/bicycle.dart';
