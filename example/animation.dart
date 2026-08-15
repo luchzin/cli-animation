@@ -36,6 +36,11 @@ Future<void> main() async {
     train,
     donut,
     bicycle,
+    MatrixRainAnimation(
+      rows: 3,
+      cols: 40,
+      color: AnsiColor.green,
+    ),
   ]);
 
   group.start();

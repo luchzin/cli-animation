@@ -15,3 +15,5 @@
 - Added configurable animation speed, duration, looping, and colors.
 - Added ANSI color support.
 :::
+## 1.0.1
+- Added matrixrain animation.

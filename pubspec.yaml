@@ -1,6 +1,6 @@
 name: cli_animation
-description: A sample command-line application with an entrypoint in `bin/`, library code.
-version: 1.0.0
+description: Animation cli that u can intergrated into your platform with rich animation
+version: 1.0.1
 repository: https://github.com/luchzin/cli-animation
 
 environment:
