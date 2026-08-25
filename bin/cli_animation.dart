@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cli_animation/lib.dart';
+import 'package:cli_animation/src/startdance.dart';
 
 Future<void> main() async {
   print('Welcome to Fun CLI\n');
@@ -29,14 +30,16 @@ Future<void> main() async {
     speed: const Duration(milliseconds: 15),
   );
   final bicycle = BicycleAnimation();
+  final star = Rotating3DStarAnimation(color: AnsiColor.yellow, width: 60);
   final group = AnimationGroup([
-    spinner,
-    blink,
-    typewriter,
-    train,
-    donut,
-    bicycle,
-    MatrixRainAnimation(rows: 3, cols: 40, color: AnsiColor.green),
+    // spinner,
+    // blink,
+    // typewriter,
+    // train,
+    // donut,
+    // bicycle,
+    star,
+    // MatrixRainAnimation(rows: 3, cols: 40, color: AnsiColor.green),
   ]);
 
   group.start();
