@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cli_animation/lib.dart';
+import 'package:cli_animation/src/audio.dart';
 import 'package:cli_animation/src/startdance.dart';
 
 Future<void> main() async {
@@ -31,6 +32,13 @@ Future<void> main() async {
   );
   final bicycle = BicycleAnimation();
   final star = Rotating3DStarAnimation(color: AnsiColor.yellow, width: 60);
+  final visualizer = AudioVisualizerAnimation(
+    bars: 20,
+    maxHeight: 6,
+    speed: const Duration(milliseconds: 50),
+    color: AnsiColor.green,
+    duration: const Duration(seconds: 6),
+  );
   final group = AnimationGroup([
     // spinner,
     // blink,
@@ -39,6 +47,7 @@ Future<void> main() async {
     // donut,
     // bicycle,
     star,
+    visualizer,
     // MatrixRainAnimation(rows: 3, cols: 40, color: AnsiColor.green),
   ]);
 
