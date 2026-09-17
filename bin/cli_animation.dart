@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cli_animation/lib.dart';
 import 'package:cli_animation/src/audio.dart';
+import 'package:cli_animation/src/spectrum.dart';
 import 'package:cli_animation/src/startdance.dart';
 
 Future<void> main() async {
@@ -39,6 +40,21 @@ Future<void> main() async {
     color: AnsiColor.green,
     duration: const Duration(seconds: 6),
   );
+
+  final visualizer1 = AudioVisualizerAnimation(
+    bars: 100,
+    maxHeight: 10,
+    speed: const Duration(milliseconds: 50),
+    color: AnsiColor.magenta,
+    duration: const Duration(seconds: 6),
+  );
+  final visualizer2 = AudioVisualizerAnimation(
+    bars: 50,
+    maxHeight: 6,
+    speed: const Duration(milliseconds: 50),
+    color: AnsiColor.cyan,
+    duration: const Duration(seconds: 6),
+  );
   final group = AnimationGroup([
     // spinner,
     // blink,
@@ -46,9 +62,16 @@ Future<void> main() async {
     // train,
     // donut,
     // bicycle,
-    star,
+    // star,
     visualizer,
+    // visualizer1,
+    // visualizer2,
     // MatrixRainAnimation(rows: 3, cols: 40, color: AnsiColor.green),
+    SpectrumAnimation(
+      label: 'Synthesizer Output',
+      barCount: 16,
+      color: AnsiColor.magenta,
+    ),
   ]);
 
   group.start();
