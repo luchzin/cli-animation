@@ -1,6 +1,6 @@
 name: cli_animation
 description: Animation cli that u can intergrated into your platform with rich animation
-version: 1.0.1
+version: 1.0.2
 repository: https://github.com/luchzin/cli-animation
 
 environment:

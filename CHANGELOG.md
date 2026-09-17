@@ -17,3 +17,6 @@
 :::
 ## 1.0.1
 - Added matrixrain animation.
+## 1.0.2
+- Add audion animation
+- Add spectrum animation
