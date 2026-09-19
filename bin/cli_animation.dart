@@ -1,83 +1,12 @@
-import 'dart:async';
-import 'package:cli_animation/lib.dart';
-import 'package:cli_animation/src/audio.dart';
-import 'package:cli_animation/src/spectrum.dart';
-import 'package:cli_animation/src/startdance.dart';
+import 'package:cli_animation/animation.dart';
+import 'package:cli_animation/src/dnahellex.dart';
 
-Future<void> main() async {
-  print('Welcome to Fun CLI\n');
-
-  final spinner = SpinnerAnimation(
-    message: 'Installing dependencies...',
-    color: AnsiColor.red,
-    speed: const Duration(milliseconds: 80),
-  );
-  final train = TrainAnimation(
-    color: AnsiColor.magenta,
-    speed: const Duration(milliseconds: 80),
-  );
-
-  final blink = BlinkAnimation(
-    text: 'WARNING: High CPU usage',
-    color: AnsiColor.yellow,
-  );
-
-  final typewriter = TypewriterAnimation(
-    text: 'Downloading assets into memory...',
-    color: AnsiColor.green,
-  );
-  final donut = DonutAnimation(
-    width: 30,
-    height: 15,
-    speed: const Duration(milliseconds: 15),
-  );
-  final bicycle = BicycleAnimation();
-  final star = Rotating3DStarAnimation(color: AnsiColor.yellow, width: 60);
-  final visualizer = AudioVisualizerAnimation(
-    bars: 20,
-    maxHeight: 6,
-    speed: const Duration(milliseconds: 50),
-    color: AnsiColor.green,
-    duration: const Duration(seconds: 6),
-  );
-
-  final visualizer1 = AudioVisualizerAnimation(
-    bars: 100,
-    maxHeight: 10,
-    speed: const Duration(milliseconds: 50),
-    color: AnsiColor.magenta,
-    duration: const Duration(seconds: 6),
-  );
-  final visualizer2 = AudioVisualizerAnimation(
-    bars: 50,
-    maxHeight: 6,
-    speed: const Duration(milliseconds: 50),
-    color: AnsiColor.cyan,
-    duration: const Duration(seconds: 6),
-  );
+void main() async {
   final group = AnimationGroup([
-    // spinner,
-    // blink,
-    // typewriter,
-    // train,
-    // donut,
-    // bicycle,
-    // star,
-    visualizer,
-    // visualizer1,
-    // visualizer2,
-    // MatrixRainAnimation(rows: 3, cols: 40, color: AnsiColor.green),
-    SpectrumAnimation(
-      label: 'Synthesizer Output',
-      barCount: 16,
-      color: AnsiColor.magenta,
-    ),
+    DnaHelixAnimation(rows: 6, color: AnsiColor.cyan),
   ]);
 
   group.start();
-
-  await Future.delayed(const Duration(seconds: 5));
-
+  await Future.delayed(const Duration(seconds: 8));
   group.stop();
-  print('\nAll tasks finished!');
 }
