@@ -1,9 +1,9 @@
 import 'package:cli_animation/lib.dart';
 
 void main() async {
-  final blackHole = BlackHoleAnimation(
-    rows: 10,
-    cols: 45,
+  final cradle = NewtonsCradleAnimation(
+    balls: 5,
+    stringLength: 4,
     color: AnsiColor.cyan,
   );
   final fountain = ParticleFountainAnimation(
@@ -11,14 +11,9 @@ void main() async {
     cols: 35,
     color: AnsiColor.yellow,
   );
-  final dna = DnaHelixAnimation(
-    rows: 6,
-    color: AnsiColor.magenta,
-  );
 
   final group = AnimationGroup([
-    blackHole,
-    dna,
+    cradle,
     fountain,
   ]);
 

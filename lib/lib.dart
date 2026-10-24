@@ -7,6 +7,7 @@ export 'src/dnahellex.dart';
 export 'src/donut.dart';
 export 'src/dots.dart';
 export 'src/matrixrain.dart';
+export 'src/newtonscradle.dart';
 export 'src/particle.dart';
 export 'src/progress.dart';
 export 'src/pulse.dart';

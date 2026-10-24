@@ -33,10 +33,41 @@ void main() {
       final helix = DnaHelixAnimation(rows: 6);
       final group = AnimationGroup([helix, hole]);
 
-      // Both animations should have their height registered in totalRows
       expect(helix.height, equals(6));
       expect(hole.height, equals(9));
       expect(group.animations.length, equals(2));
+    });
+  });
+
+  group('NewtonsCradleAnimation tests', () {
+    test('initializes with default and custom parameters', () {
+      final defaultCradle = NewtonsCradleAnimation();
+      expect(defaultCradle.balls, equals(5));
+      expect(defaultCradle.stringLength, equals(4));
+      expect(defaultCradle.height, equals(6));
+
+      final customCradle = NewtonsCradleAnimation(
+        balls: 3,
+        stringLength: 3,
+        color: AnsiColor.green,
+      );
+      expect(customCradle.balls, equals(3));
+      expect(customCradle.stringLength, equals(3));
+      expect(customCradle.height, equals(5));
+    });
+
+    test('tick runs and renders swings', () {
+      final cradle = NewtonsCradleAnimation();
+      for (var i = 0; i < 20; i++) {
+        expect(() => cradle.tick(), returnsNormally);
+      }
+    });
+
+    test('integrates with AnimationGroup', () {
+      final cradle = NewtonsCradleAnimation(stringLength: 4);
+      final group = AnimationGroup([cradle]);
+      expect(cradle.height, equals(6));
+      expect(group.animations.first, equals(cradle));
     });
   });
 }
