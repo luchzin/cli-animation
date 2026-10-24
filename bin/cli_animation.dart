@@ -1,15 +1,24 @@
-import 'package:cli_animation/animation.dart';
-import 'package:cli_animation/src/dnahellex.dart';
-import 'package:cli_animation/src/particle.dart';
+import 'package:cli_animation/lib.dart';
 
 void main() async {
+  final blackHole = BlackHoleAnimation(
+    rows: 10,
+    cols: 45,
+    color: AnsiColor.cyan,
+  );
   final fountain = ParticleFountainAnimation(
     rows: 8,
     cols: 35,
     color: AnsiColor.yellow,
   );
+  final dna = DnaHelixAnimation(
+    rows: 6,
+    color: AnsiColor.magenta,
+  );
+
   final group = AnimationGroup([
-    DnaHelixAnimation(rows: 6, color: AnsiColor.cyan),
+    blackHole,
+    dna,
     fountain,
   ]);
 

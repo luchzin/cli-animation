@@ -77,7 +77,6 @@ class Rotating3DStarAnimation extends Animation {
 
       // Rotate around Z
       final x3 = x2 * cosZ - y1 * sinZ;
-      final y3 = x2 * sinZ + y1 * cosZ;
 
       // 2. Perspective Projection onto 1D line with Z-depth buffer
       final distance = 3.0;

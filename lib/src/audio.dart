@@ -75,7 +75,7 @@ class AudioVisualizerAnimation extends Animation {
           buffer.write('${_blocks[fraction]} ');
         } else if (r == peakRow && _peaks[b] > 0.5) {
           // Floating peak cap (rendered in yellow/dim highlight)
-          buffer.write('${AnsiColor.yellow}▔${color} ');
+          buffer.write('${AnsiColor.yellow}▔$color ');
         } else {
           // Empty space
           buffer.write('  ');
