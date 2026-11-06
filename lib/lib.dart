@@ -3,6 +3,7 @@ export 'animation.dart';
 
 // 2D Primitive & Shape Nodes
 export 'src/nodes/circle.dart';
+export 'src/nodes/custom_node.dart';
 export 'src/nodes/line.dart';
 export 'src/nodes/sprite.dart';
 export 'src/nodes/square.dart';

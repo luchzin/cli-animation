@@ -1,12 +1,11 @@
 name: cli_animation
-description: Animation cli that u can intergrated into your platform with rich animation
-version: 1.0.2
+description: A 2D terminal Canvas and Scene Graph animation engine for Dart CLI applications, featuring (x, y) positionable nodes, shapes, and physics-based animations.
+version: 1.1.0
 repository: https://github.com/luchzin/cli-animation
 
 environment:
   sdk: ^3.12.2
 
-# Add regular dependencies here.
 dependencies:
   args: ^2.7.0
   path: ^1.9.0

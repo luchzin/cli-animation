@@ -1,22 +1,22 @@
 # Changelog
 
+## 1.1.0
+- Introduced a 2D terminal `Canvas` and `CanvasContext2D` rendering engine inspired by HTML5 Canvas 2D.
+- Added hierarchical scene-graph `Node` architecture (`Node`, `GroupNode`) supporting `(x, y)` coordinates, `zIndex` depth sorting, visibility toggling, and `onResize` terminal hooks.
+- Added 2D shape and primitive nodes: `Square`, `RectNode`, `Circle`, `Line`, `TextNode`, `SpriteNode`, and `CustomNode`.
+- Extended `AnsiColor` with 256-color palette (`AnsiColor.palette`) and 24-bit RGB (`AnsiColor.rgb`) support.
+- Added `NewtonsCradleAnimation`, `BlackHoleAnimation`, `ParticleFountainAnimation`, `DnaHelixAnimation`, and `Rotating3DStarAnimation`.
+- Migrated all 17 built-in animations to extend `Node` and render directly onto `CanvasContext2D` at any `(x, y)` position while preserving standalone `Animation` and `AnimationGroup` compatibility.
+
+## 1.0.2
+- Added `AudioVisualizerAnimation`.
+- Added `SpectrumAnimation`.
+
+## 1.0.1
+- Added `MatrixRainAnimation`.
+
 ## 1.0.0
 - Initial stable release.
-- Added spinner animation.
-- Added dots animation.
-- Added pulse animation.
-- Added blink animation.
-- Added progress animation.
-- Added donut animation.
-- Added typewriter animation.
-- Added train animation.
-- Added bicycle animation.
-- Added animation groups.
-- Added configurable animation speed, duration, looping, and colors.
-- Added ANSI color support.
-:::
-## 1.0.1
-- Added matrixrain animation.
-## 1.0.2
-- Add audion animation
-- Add spectrum animation
+- Added spinner, dots, pulse, blink, progress, donut, typewriter, train, and bicycle animations.
+- Added `AnimationGroup` for running multiple animations concurrently.
+- Added configurable animation speed, duration, looping, and ANSI color support.
