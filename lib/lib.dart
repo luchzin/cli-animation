@@ -1,4 +1,14 @@
-export './animation.dart';
+// Core 2D Canvas & Scene Graph
+export 'animation.dart';
+
+// 2D Primitive & Shape Nodes
+export 'src/nodes/circle.dart';
+export 'src/nodes/line.dart';
+export 'src/nodes/sprite.dart';
+export 'src/nodes/square.dart';
+export 'src/nodes/text.dart';
+
+// Built-in Animations (all extend Node & support 2D x, y positioning)
 export 'src/audio.dart';
 export 'src/bicycle.dart';
 export 'src/blackhole.dart';

@@ -1,7 +1,13 @@
 import '../animation.dart';
 
+/// A blinking text node that toggles visibility on each tick.
 class BlinkAnimation extends Animation {
   BlinkAnimation({
+    super.x = 0,
+    super.y = 0,
+    super.zIndex = 0,
+    super.visible = true,
+    super.id,
     required this.text,
     super.speed = const Duration(milliseconds: 500),
     super.duration,
@@ -10,16 +16,20 @@ class BlinkAnimation extends Animation {
   });
 
   final String text;
-  bool _visible = true;
+  bool _showText = true;
+
+  @override
+  int get width => text.length;
 
   @override
   void tick() {
-    clearLine();
+    _showText = !_showText;
+  }
 
-    if (_visible) {
-      write(text);
+  @override
+  void draw(CanvasContext2D ctx) {
+    if (_showText) {
+      ctx.drawText(0, 0, text, color: color, z: zIndex.toDouble());
     }
-
-    _visible = !_visible;
   }
 }
