@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.1.1
+- Add examples
 ## 1.1.0
 - Introduced a 2D terminal `Canvas` and `CanvasContext2D` rendering engine inspired by HTML5 Canvas 2D.
 - Added hierarchical scene-graph `Node` architecture (`Node`, `GroupNode`) supporting `(x, y)` coordinates, `zIndex` depth sorting, visibility toggling, and `onResize` terminal hooks.
