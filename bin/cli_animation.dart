@@ -1,4 +1,4 @@
-import 'package:cli_animation/lib.dart';
+import 'package:cli_animation/cli_animation.dart';
 
 void main() async {
   late final Node square;

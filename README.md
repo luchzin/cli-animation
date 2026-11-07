@@ -35,7 +35,7 @@ lib/
 ## Quick Start (2D Canvas & Nodes)
 
 ```dart
-import 'package:cli_animation/lib.dart';
+import 'package:cli_animation/cli_animation.dart';
 
 Future<void> main() async {
   late final ParticleFountainAnimation fountain;

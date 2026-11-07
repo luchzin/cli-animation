@@ -1,31 +1,46 @@
 import 'dart:async';
-import 'package:cli_animation/lib.dart';
+import 'package:cli_animation/cli_animation.dart';
 
 Future<void> main() async {
   print('Welcome to CLI 2D Canvas\n');
+
+  late final ParticleFountainAnimation fountain;
 
   final cv = Canvas(
     size: const Size(80, 22),
     border: true,
     onResize: (newSize) {
-      // Respond to terminal or canvas size updates
+      // Respond dynamically to terminal or canvas resize events
+      fountain.x = (newSize.width - fountain.width - 2).toDouble();
     },
   );
 
-  final square = Square(
+  // 1. Add 2D shape & text nodes at (x, y) coordinates
+  final Node square = Square(
     x: 2,
     y: 2,
     size: 4,
     color: AnsiColor.green,
+    onTick: (node, dt) {
+      node.x = 2 + ((DateTime.now().millisecondsSinceEpoch / 300) % 4);
+    },
   );
 
-  final circle = Circle(
+  final Node circle = Circle(
     x: 18,
     y: 4,
     radius: 2,
     color: AnsiColor.magenta,
   );
 
+  final Node title = TextNode(
+    'CLI 2D Canvas Engine',
+    x: 2,
+    y: 1,
+    color: AnsiColor.white,
+  );
+
+  // 2. Add built-in animations as scene-graph Nodes positioned at (x, y)
   final spinner = SpinnerAnimation(
     x: 2,
     y: 7,
@@ -65,15 +80,16 @@ Future<void> main() async {
     color: AnsiColor.cyan,
   );
 
-  final matrix = MatrixRainAnimation(
+  fountain = ParticleFountainAnimation(
     x: 44,
     y: 10,
-    rows: 8,
+    rows: 10,
     cols: 32,
-    color: AnsiColor.green,
+    color: AnsiColor.yellow,
   );
 
   cv.addAll([
+    title,
     square,
     circle,
     spinner,
@@ -81,12 +97,12 @@ Future<void> main() async {
     typewriter,
     train,
     cradle,
-    matrix,
+    fountain,
   ]);
 
   cv.start();
 
-  await Future.delayed(const Duration(seconds: 5));
+  await Future.delayed(const Duration(seconds: 6));
 
   cv.stop();
   print('\nAll tasks finished!');
