@@ -1,62 +1,29 @@
 import 'package:cli_animation/cli_animation.dart';
 
-void main() async {
-  late final Node square;
-  late final NewtonsCradleAnimation cradle;
-  late final ParticleFountainAnimation fountain;
+void main() {
+  late final Canvas cv;
+  final player = Square(x: 10, y: 12, size: 3, color: AnsiColor.cyan,fillColor:AnsiColor.cyan);
 
-  final cv = Canvas(
-    size: const Size(76, 16),
+  cv = Canvas(
+    size: const Size(60, 18),
     border: true,
-    onResize: (newSize) {
-      // Dynamically reposition nodes when canvas/terminal resizes
-      fountain.x = (newSize.width - fountain.width - 2).toDouble();
+    onKey: (event) {
+      if (event.isUp || event.char == 'w') {
+        player.y -= 1;
+      } else if (event.isDown || event.char == 's') {
+        player.y += 1;
+      } else if (event.isLeft || event.char == 'a') {
+        player.x -= 2;
+      } else if (event.isRight || event.char == 'd') {
+        player.x += 2;
+      } else if (event.isSpace) {
+        player.y -= 3; // Jump
+      } else if (event.char == 'q' || event.isEscape) {
+        cv.stop();
+      }
     },
   );
 
-  // 1. Add 2D primitive nodes with (x, y) coordinates
-  square = Square(
-    x: 3,
-    y: 2,
-    size: 4,
-    color: AnsiColor.green,
-    asciiBorder: true,
-    onTick: (node, dt) {
-      // Gentle horizontal oscillation
-      node.x = 3 + ((DateTime.now().millisecondsSinceEpoch / 300) % 4);
-    },
-  );
-
-  final title = TextNode(
-    'CLI 2D Canvas Engine',
-    x: 3,
-    y: 1,
-    color: AnsiColor.white,
-  );
-
-  // 2. Add built-in animations as scene-graph Nodes at (x, y)
-  cradle = NewtonsCradleAnimation(
-    x: 14,
-    y: 2,
-    balls: 5,
-    stringLength: 4,
-    color: AnsiColor.cyan,
-  );
-
-  fountain = ParticleFountainAnimation(
-    x: 42,
-    y: 4,
-    rows: 10,
-    cols: 30,
-    color: AnsiColor.yellow,
-  );
-
-  cv.add(title);
-  cv.add(square);
-  cv.add(cradle);
-  cv.add(fountain);
-
+  cv.add(player);
   cv.start();
-  await Future.delayed(const Duration(seconds: 8));
-  cv.stop();
 }

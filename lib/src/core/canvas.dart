@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'ansi_color.dart';
 import 'context_2d.dart';
+import 'key_event.dart';
 import 'node.dart';
 import 'size.dart';
 
@@ -11,6 +12,9 @@ typedef ResizeCallback = void Function(Size newSize);
 
 /// Callback signature invoked on every frame before rendering.
 typedef FrameCallback = void Function(double dt, CanvasContext2D ctx);
+
+/// Callback signature invoked when a terminal key is pressed.
+typedef KeyCallback = void Function(KeyEvent event);
 
 /// A 2D terminal Canvas that manages a scene graph of [Node]s and renders them at `(x, y)`.
 ///
@@ -33,6 +37,8 @@ class Canvas {
     this.frameRate = const Duration(milliseconds: 50),
     this.onResize,
     this.onUpdate,
+    this.onKey,
+    this.handleCtrlC = true,
     this.autoResize = false,
     this.backgroundChar = ' ',
     this.backgroundColor = AnsiColor.reset,
@@ -54,6 +60,16 @@ class Canvas {
   /// Optional per-frame hook called before nodes are drawn.
   final FrameCallback? onUpdate;
 
+  /// Optional keyboard listener invoked when keys are pressed in the terminal.
+  ///
+  /// When provided, `Canvas.start()` automatically switches `stdin` into
+  /// unbuffered, non-echoing raw mode (if attached to a TTY) and restores it
+  /// cleanly on `Canvas.stop()`.
+  final KeyCallback? onKey;
+
+  /// Whether pressing Ctrl+C automatically calls [stop] when [onKey] is active.
+  final bool handleCtrlC;
+
   /// Whether to listen to OS terminal resize signals (`SIGWINCH`) automatically.
   final bool autoResize;
 
@@ -72,6 +88,10 @@ class Canvas {
   final List<Node> _nodes = [];
   Timer? _timer;
   StreamSubscription<ProcessSignal>? _resizeSubscription;
+  StreamSubscription<List<int>>? _keySubscription;
+  bool _rawInputEnabled = false;
+  bool? _prevEchoMode;
+  bool? _prevLineMode;
   DateTime? _lastFrameTime;
   bool _running = false;
   int _allocatedTerminalRows = 0;
@@ -175,6 +195,10 @@ class Canvas {
       }
     }
 
+    if (onKey != null) {
+      _startKeyboardListener();
+    }
+
     _tickFrame(0.0);
 
     _timer = Timer.periodic(frameRate, (_) {
@@ -196,6 +220,7 @@ class Canvas {
     _timer = null;
     _resizeSubscription?.cancel();
     _resizeSubscription = null;
+    _stopKeyboardListener();
 
     for (final node in _nodes) {
       node.unmount();
@@ -244,6 +269,58 @@ class Canvas {
     }
 
     return _ctx.toAnsiString();
+  }
+
+  /// Parses raw terminal input [bytes] and dispatches each resulting [KeyEvent].
+  ///
+  /// Useful for testing keyboard interactions headlessly without a live TTY.
+  void handleInputBytes(List<int> bytes) {
+    final events = KeyEvent.parseBytes(bytes);
+    for (final event in events) {
+      dispatchKey(event);
+    }
+  }
+
+  /// Dispatches a [KeyEvent] to [onKey] and handles Ctrl+C when [handleCtrlC] is true.
+  void dispatchKey(KeyEvent event) {
+    onKey?.call(event);
+    if (handleCtrlC && event.key == KeyCode.ctrlC && _running) {
+      stop();
+    }
+  }
+
+  void _startKeyboardListener() {
+    if (_keySubscription != null) return;
+    try {
+      if (stdin.hasTerminal) {
+        _prevEchoMode = stdin.echoMode;
+        _prevLineMode = stdin.lineMode;
+        stdin.echoMode = false;
+        stdin.lineMode = false;
+        _rawInputEnabled = true;
+      }
+      _keySubscription = stdin.listen(handleInputBytes);
+    } catch (_) {
+      // stdin may not be available or configurable in non-interactive environments
+    }
+  }
+
+  void _stopKeyboardListener() {
+    _keySubscription?.cancel();
+    _keySubscription = null;
+    if (_rawInputEnabled) {
+      try {
+        if (stdin.hasTerminal) {
+          stdin.lineMode = _prevLineMode ?? true;
+          stdin.echoMode = _prevEchoMode ?? true;
+        }
+      } catch (_) {
+        // Ignore if terminal is already closed
+      }
+      _rawInputEnabled = false;
+      _prevEchoMode = null;
+      _prevLineMode = null;
+    }
   }
 
   void _tickFrame(double dt) {

@@ -78,6 +78,62 @@ void main() {
     });
   });
 
+  group('Keyboard & KeyEvent tests', () {
+    test('parses arrow keys, space, enter, escape, and characters', () {
+      final events = KeyEvent.parseBytes([
+        27, 91, 65, // Up
+        27, 91, 66, // Down
+        27, 91, 67, // Right
+        27, 91, 68, // Left
+        32, // Space
+        13, // Enter
+        27, // Escape
+        119, // 'w'
+        3, // Ctrl+C
+      ]);
+
+      expect(events.length, equals(9));
+      expect(events[0].isUp, isTrue);
+      expect(events[1].isDown, isTrue);
+      expect(events[2].isRight, isTrue);
+      expect(events[3].isLeft, isTrue);
+      expect(events[4].isSpace, isTrue);
+      expect(events[5].isEnter, isTrue);
+      expect(events[6].isEscape, isTrue);
+      expect(events[7].key, equals(KeyCode.character));
+      expect(events[7].char, equals('w'));
+      expect(events[8].key, equals(KeyCode.ctrlC));
+      expect(events[8].isCtrl, isTrue);
+    });
+
+    test('Canvas.onKey moves a Square node with up/down/left/right/jump', () {
+      final player = Square(x: 10, y: 10, size: 2);
+      final cv = Canvas(
+        size: const Size(40, 20),
+        onKey: (event) {
+          if (event.isUp || event.char == 'w') player.y -= 1;
+          if (event.isDown || event.char == 's') player.y += 1;
+          if (event.isLeft || event.char == 'a') player.x -= 2;
+          if (event.isRight || event.char == 'd') player.x += 2;
+          if (event.isSpace) player.y -= 3; // Jump
+        },
+      );
+      cv.add(player);
+
+      cv.handleInputBytes([27, 91, 65]); // Up -> y = 9
+      expect(player.y, equals(9));
+
+      cv.handleInputBytes([32]); // Space (jump) -> y = 6
+      expect(player.y, equals(6));
+
+      cv.handleInputBytes([27, 91, 67]); // Right -> x = 12
+      expect(player.x, equals(12));
+
+      cv.handleInputBytes([115]); // 's' (down) -> y = 7
+      expect(player.y, equals(7));
+    });
+  });
+
   group('BlackHoleAnimation tests', () {
     test('initializes with default and custom parameters', () {
       final defaultHole = BlackHoleAnimation();
