@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 1.1.2
+- Added terminal keyboard listener support (`onKey`, `handleCtrlC`, `handleInputBytes`, `dispatchKey`) to `Canvas` with automatic raw-mode setup and restoration.
+- Added `KeyEvent` and `KeyCode` to parse arrow keys, Space, Enter, Escape, Ctrl combinations, and UTF-8 characters.
+- Fixed terminal frame flushing in `Canvas` so rendering no longer scrolls or duplicates top border lines when the canvas height approaches the terminal height.
+- Added interactive hit-the-ball mini-game example (`example/hit_ball_game.dart`) with score and countdown header.
+
 ## 1.1.1
 - Add examples
 ## 1.1.0

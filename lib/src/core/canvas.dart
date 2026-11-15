@@ -177,10 +177,11 @@ class Canvas {
       node.mount();
     }
 
-    // Reserve vertical space in the terminal
+    // Reserve vertical space in the terminal (height - 1 newlines so cursor
+    // rests on the last canvas row without scrolling past the bottom).
     _allocatedTerminalRows = _size.height;
     stderr.write('\x1B[?25l'); // Hide cursor
-    for (var i = 0; i < _allocatedTerminalRows; i++) {
+    for (var i = 0; i < _allocatedTerminalRows - 1; i++) {
       stderr.writeln();
     }
 
@@ -227,13 +228,15 @@ class Canvas {
     }
 
     if (clearOnStop && _allocatedTerminalRows > 0) {
+      final moveUp = _allocatedTerminalRows - 1;
+      final upSeq = moveUp > 0 ? '\x1B[${moveUp}A' : '';
       stderr.write(
-        '\x1B[${_allocatedTerminalRows}A'
+        '$upSeq\r'
         '\x1B[J'
         '\x1B[?25h',
       );
     } else {
-      stderr.write('\x1B[?25h');
+      stderr.write('\n\x1B[?25h');
     }
     _allocatedTerminalRows = 0;
   }
@@ -340,9 +343,11 @@ class Canvas {
       _allocatedTerminalRows = lines.length;
     }
 
-    if (_allocatedTerminalRows > 0) {
-      buffer.write('\x1B[${_allocatedTerminalRows}A');
+    final moveUp = _allocatedTerminalRows - 1;
+    if (moveUp > 0) {
+      buffer.write('\x1B[${moveUp}A');
     }
+    buffer.write('\r');
 
     for (var i = 0; i < _allocatedTerminalRows; i++) {
       buffer.write('\x1B[2K\r');
@@ -354,7 +359,6 @@ class Canvas {
       }
     }
 
-    buffer.write('\n\r');
     stderr.write(buffer.toString());
   }
 }
