@@ -1,6 +1,8 @@
 # Changelog
 
 
+## 1.1.3
+- add readme.md example
 ## 1.1.2
 - Added terminal keyboard listener support (`onKey`, `handleCtrlC`, `handleInputBytes`, `dispatchKey`) to `Canvas` with automatic raw-mode setup and restoration.
 - Added `KeyEvent` and `KeyCode` to parse arrow keys, Space, Enter, Escape, Ctrl combinations, and UTF-8 characters.
